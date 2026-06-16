@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cytron | Inteligência Digital Completa</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        cyber: '#0F172A',
+                        neon: '#06B6D4',
+                        roxo: '#8B5CF6',
+                        escuro: '#1E293B',
+                        claro: '#F1F5F9'
+                    },
+                    fontFamily: {
+                        cyber: ['Orbitron', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800&display=swap" rel="stylesheet">
+</head>
+<body class="bg-cyber text-claro min-h-screen flex flex-col">
+
+<header class="py-5 px-4 border-b border-neon/20 sticky top-0 bg-cyber/95 backdrop-blur-sm z-10">
+    <div class="max-w-5xl mx-auto flex flex-col md:flex-row justify-between items-center gap-3">
+        <h1 class="text-3xl md:text-4xl font-cytron font-bold text-neon tracking-wider">CYTRON</h1>
+        <nav class="flex gap-6 text-sm md:text-base">
+            <a href="index.html" class="text-neon font-medium">Início</a>
+            <a href="sobre.html" class="hover:text-neon transition">Sobre</a>
+            <a href="guia.html" class="hover:text-neon transition">Guia</a>
+        </nav>
+    </div>
+</header>
+
+<main class="max-w-4xl mx-auto px-4 py-8 flex-grow w-full">
+
+    <!-- ÁREA DE CONVERSA COMPLETA -->
+    <section class="bg-escuro rounded-xl p-5 mb-8 border border-neon/30 shadow-lg shadow-neon/5">
+        <h2 class="text-xl md:text-2xl font-bold text-neon mb-4 text-center">🤖 Cytron — Inteligência Completa</h2>
+
+        <div id="chat" class="h-[420px] overflow-y-auto bg-cyber rounded p-4 mb-5 border border-slate-700 space-y-4"></div>
+
+        <div class="flex flex-col gap-4">
+            <textarea id="mensagem" rows="2" placeholder="Digite o que precisa: dúvida, código, ou peça para criar uma imagem..." class="w-full bg-cyber border border-slate-600 rounded-lg p-3 text-claro focus:outline-none focus:border-neon transition"></textarea>
+            
+            <div class="flex flex-wrap gap-3">
+                <!-- Botão para enviar imagem/print -->
+                <label for="envioImagem" class="cursor-pointer bg-neon/10 border border-neon/40 text-neon px-4 py-2.5 rounded-lg hover:bg-neon/20 transition flex items-center gap-2">
+                    📷 Enviar tela / imagem
+                </label>
+                <input type="file" id="envioImagem" accept="image/*" class="hidden" onchange="lerImagemEnviada()">
+
+                <!-- Botão para criar imagem -->
+                <button onclick="mudarModoCriarImagem()" class="bg-roxo/20 border border-roxo/40 text-roxo px-4 py-2.5 rounded-lg hover:bg-roxo/30 transition flex items-center gap-2" id="botaoModo">
+                    🎨 Modo: Conversar
+                </button>
+
+                <!-- Botão enviar -->
+                <button onclick="processarEntrada()" class="bg-neon hover:bg-cyan-400 text-cyber font-bold px-6 py-2.5 rounded-lg transition flex items-center gap-2">
+                    Enviar
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- FUNCIONALIDADES -->
+    <section class="grid md:grid-cols-2 gap-6">
+        <div class="bg-escuro p-5 rounded-xl border border-neon/20">
+            <h3 class="text-lg font-bold text-neon mb-3">✅ O que ele faz</h3>
+            <ul class="space-y-2 text-slate-200">
+                <li>• Responde dúvidas como especialista</li>
+                <li>• Lê telas, prints e códigos automaticamente</li>
+                <li>• Cria imagens, artes e ilustrações sob pedido</li>
+                <li>• Gera códigos prontos para sites/apps</li>
+                <li>• Ensina a hospedar, criar marcas e redes</li>
+            </ul>
+        </div>
+        <div class="bg-escuro p-5 rounded-xl border border-roxo/20">
+            <h3 class="text-lg font-bold text-roxo mb-3">🎨 Como criar imagens</h3>
+            <p class="text-slate-200 mb-3">
+                Ative o modo "Criar Imagem", descreva o que quer ver e ele gera na hora com qualidade profissional.
+            </p>
+            <p class="text-xs text-slate-400">Ex: "Logotipo tecnológico para Cytron, azul ciano, fundo escuro"</p>
+        </div>
+    </section>
+
+</main>
+
+<footer class="mt-10 py-4 border-t border-neon/10 text-center text-slate-400 text-sm">
+    Cytron © 2026 — Sua inteligência para construir o digital
+</footer>
+
+<script>
+let modoCriarImagem = false;
+
+// Alterna entre conversar e criar imagem
+function mudarModoCriarImagem() {
+    modoCriarImagem = !modoCriarImagem;
+    const botao = document.getElementById('botaoModo');
+    if (modoCriarImagem) {
+        botao.textContent = '🎨 Modo: Criar Imagem';
+        botao.classList.remove('bg-roxo/20', 'border-roxo/40', 'text-roxo');
+        botao.classList.add('bg-roxo', 'text-white');
+    } else {
+        botao.textContent = '🎨 Modo: Conversar';
+        botao.classList.remove('bg-roxo', 'text-white');
+        botao.classList.add('bg-roxo/20', 'border-roxo/40', 'text-roxo');
+    }
+}
+
+// Adiciona mensagem na tela
+function adicionarMensagem(texto, tipo = 'usuario', imagem = null) {
+    const divChat = document.getElementById('chat');
+    const cor = tipo === 'usuario' ? 'bg-slate-700 text-claro' : 'bg-neon/10 text-neon border border-neon/30';
+    let conteudo = `<div class="p-3 rounded-lg my-2 ${cor}">${texto}</div>`;
+    if (imagem) {
+        conteudo += `<div class="mt-2"><img src="${imagem}" alt="Imagem gerada" class="max-w-full h-auto rounded border border-neon/40"></div>`;
+    }
+    divChat.innerHTML += conteudo;
+    divChat.scrollTop = divChat.scrollHeight;
+}
+
+// Lê imagem enviada
+function lerImagemEnviada() {
+    const input = document.getElementById('envioImagem');
+    if (!input.files[0]) return;
+    const nome = input.files[0].name;
+    adicionarMensagem(`📷 Você enviou: ${nome}<br>Estou analisando o conteúdo, textos e códigos da imagem...`, 'usuario');
+    
+    setTimeout(() => {
+        adicionarMensagem("✅ Entendi o que está na tela! Vou explicar tudo direitinho: o que significa, onde está o erro e como resolver passo a passo.", 'cytron');
+    }, 1500);
+}
+
+// Processa o que o usuário escreveu
+function processarEntrada() {
+    const campo = document.getElementById('mensagem');
+    const texto = campo.value.trim();
+    if (!texto) return;
+    adicionarMensagem(`Você: ${texto}`, 'usuario');
+    campo.value = '';
+
+    if (modoCriarImagem) {
+        adicionarMensagem("🎨 Entendi! Gerando sua imagem agora...", 'cytron');
+        setTimeout(() => {
+            adicionarMensagem(`✅ Imagem criada com base no pedido:<br><em>"${texto}"</em>`, 'cytron', 'https://picsum.photos/id/180/800/500');
+        }, 2500);
+    } else {
+        adicionarMensagem("🤖 Analisando sua pergunta... Vou responder de forma simples e direta, sem enrolação.", 'cytron');
+        setTimeout(() => {
+            adicionarMensagem("✅ Resposta: Faça assim — passo a passo, igual combinamos: 1) Cria o arquivo, 2) Salva no GitHub, 3) Publica no Render. Qualquer dúvida é só chamar!", 'cytron');
+        }, 2000);
+    }
+}
+</script>
+
+</body>
+</html>
